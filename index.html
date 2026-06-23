@@ -52,6 +52,8 @@
     font-feature-settings:"liga" 1,"kern" 1;
   }
   ::selection{background:var(--coral);color:#fff;}
+  h1,h2,h3,h4,p,.display,.hero__title,.pull,.lede{overflow-wrap:break-word;}
+  img{max-width:100%;height:auto;}
 
   /* ---------- reading progress ---------- */
   .progress{
@@ -174,8 +176,8 @@
   .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:40px;}
   .grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;margin-top:40px;}
   .ocard{border:1px solid var(--line);background-color:var(--paper);
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 40 40'%3E%3Cpath d='M20 0L40 20L20 40L0 20Z' fill='none' stroke='%23e9ebf0' stroke-width='1'/%3E%3C/svg%3E");
-background-size: 10px 10px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 40 40'%3E%3Cpath d='M20 0L40 20L20 40L0 20Z' fill='none' stroke='%231a1c20' stroke-width='1'/%3E%3C/svg%3E");
+background-size: 3px 3px;
     padding:28px 26px 30px;display:flex;flex-direction:column;transition:transform .25s ease,box-shadow .25s ease;}
   .band--alt .ocard{background:var(--paper);}
   .ocard:hover{transform:translateY(-3px);box-shadow:0 18px 40px -28px rgba(9,9,11,.35);border-color:rgba(37,99,235,.4);}
@@ -332,7 +334,7 @@ background-size: 10px 10px;
   <div class="hero__crumb">
     <span>Frontend · Insights</span><span class="sep"></span><span>takeUforward</span>
   </div>
-  <h1>On <em>takeUforward</em> <br> And how <br> can I help</h1>
+  <h1>On <em>takeUforward</em> <br> and More</h1>
   <p class="hero__sub">A small experiment and write-up from someone who has been following TUF's journey over a year,<mark>fewer steps between opening the app and the next problem.</mark></p>
 </section>
 
@@ -603,7 +605,7 @@ background-size: 10px 10px;
     </article>
     <article class="ocard reveal">
       <h4>See it live</h4>
-      <p>Rebuilt Home → <a href="dashboard.html" style="color:var(--coral)">dashboard.html</a>, the A2Z sheet → <a href="sheet.html" style="color:var(--coral)">sheet.html</a>, and the Interview flow → <a href="interview.html" style="color:var(--coral)">interview.html</a> + <a href="interview-experience.html" style="color:var(--coral)">detail</a>. All responsive.</p>
+      <p>Rebuilt Home → <a href="dashboard.html" style="color:var(--coral)">dashboard.html</a>, the A2Z sheet, and the Interview flow detail</a>. All responsive.</p>
     </article>
   </div>
 
