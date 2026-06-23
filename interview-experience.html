@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Google · Software Engineering Intern Interview Experience</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#f6f7f9;--surface:#fff;--surface-2:#fbfbfc;--surface-3:#f3f4f6;
+    --text:#0a0a0c;--text-2:#3f3f46;--muted:#6b7280;--faint:#9aa0ab;
+    --line:#ececef;--line-2:#e3e4e8;
+    --brand:#4f46e5;--brand-soft:#eef0fe;
+    --green:#0b9d6b;--green-soft:#e6f6ef;--amber:#d97706;--amber-soft:#fdf3e3;--rose:#e11d6b;
+    --shadow-sm:0 1px 2px rgba(10,10,12,.05),0 1px 3px rgba(10,10,12,.04);
+    --shadow:0 4px 12px -4px rgba(10,10,12,.08),0 2px 6px -2px rgba(10,10,12,.05);
+    --r:12px;--r-lg:18px;--top:60px;
+    --sans:"Inter",system-ui,sans-serif;--display:"Fraunces",Georgia,serif;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased;}
+  a{color:inherit;text-decoration:none;}
+  button{font-family:inherit;cursor:pointer;}
+  ::selection{background:var(--brand);color:#fff;}
+
+  .topbar{position:sticky;top:0;z-index:50;height:var(--top);background:rgba(246,247,249,.82);
+    backdrop-filter:saturate(1.4) blur(12px);-webkit-backdrop-filter:saturate(1.4) blur(12px);
+    border-bottom:1px solid var(--line);display:flex;align-items:center;gap:16px;padding:0 clamp(16px,4vw,40px);}
+  .back{height:36px;padding:0 14px;border-radius:9px;border:1px solid var(--line-2);background:var(--surface);
+    font-size:13.5px;font-weight:500;color:var(--text-2);box-shadow:var(--shadow-sm);transition:.16s;display:flex;align-items:center;}
+  .back:hover{color:var(--text);border-color:#d3d5da;}
+  .brand-word{font-weight:600;font-size:15px;display:flex;align-items:center;gap:7px;}
+  .brand-word .tuf{color:var(--brand);} .brand-word b{font-weight:700;}
+  .crumb{margin-left:4px;color:var(--faint);font-size:13.5px;}
+
+  .wrap{max-width:860px;margin:0 auto;padding:clamp(28px,4vw,44px) clamp(16px,4vw,40px) 90px;}
+
+  /* head */
+  .head{background:var(--surface);
+    border:1px solid var(--line);border-radius:var(--r-lg);padding:26px 28px;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.7),0 1px 2px rgba(16,24,40,.06),0 8px 16px -8px rgba(16,24,40,.22);}
+  .head__top{display:flex;align-items:flex-start;gap:16px;}
+  .logo{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;color:#fff;font-weight:700;font-size:22px;flex:none;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 6px 14px -6px rgba(0,0,0,.45);}
+  .head h1{font-size:clamp(20px,2.6vw,26px);font-weight:600;letter-spacing:-.02em;margin:2px 0 5px;}
+  .head .sub{font-size:13px;color:var(--muted);}
+  .verdict{margin-left:auto;font-size:12.5px;font-weight:600;padding:6px 13px;border-radius:20px;white-space:nowrap;}
+  .v-sel{background:var(--green-soft);color:var(--green);} .v-rej{background:#fdecec;color:#dc2626;}
+  .byline{display:flex;align-items:center;gap:10px;margin-top:18px;padding-top:16px;border-top:1px solid var(--line);font-size:13px;color:var(--muted);}
+  .byline .who{color:var(--text-2);font-weight:500;}
+  .byline .when{margin-left:auto;}
+  .facts{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px;}
+  .fact{font-size:12px;color:var(--text-2);background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:7px 11px;}
+  .fact b{color:var(--text);font-weight:600;}
+
+  h2.sh{font-size:18px;font-weight:600;letter-spacing:-.02em;margin:38px 0 14px;}
+
+  /* rounds */
+  .rounds{display:flex;flex-direction:column;gap:10px;}
+  .dround{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.7),0 1px 2px rgba(16,24,40,.06),0 8px 16px -10px rgba(16,24,40,.2);}
+  .dround__h{display:flex;align-items:center;gap:14px;padding:16px 18px;}
+  .rn{width:40px;height:40px;border-radius:11px;background:var(--brand-soft);color:var(--brand);display:grid;place-items:center;flex:none;text-align:center;line-height:1.1;}
+  .rn b{font-size:15px;font-weight:700;display:block;} .rn span{font-size:9px;text-transform:uppercase;letter-spacing:.04em;}
+  .dround__t{font-size:14.5px;font-weight:600;}
+  .dround__m{font-size:12.5px;color:var(--muted);margin-top:2px;}
+  .dif{font-size:11px;font-weight:600;padding:3px 9px;border-radius:7px;margin-left:auto;flex:none;}
+  .dif.e{background:var(--green-soft);color:var(--green);} .dif.m{background:var(--amber-soft);color:var(--amber);} .dif.h{background:#fdecec;color:#dc2626;}
+  .dround__b{padding:0 18px 16px 72px;font-size:13.5px;color:var(--text-2);}
+
+  /* prose */
+  .prose{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:24px 28px;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.7),0 1px 2px rgba(16,24,40,.06),0 8px 16px -8px rgba(16,24,40,.22);}
+  .prose h3{font-size:14.5px;font-weight:600;margin:22px 0 8px;}
+  .prose h3:first-child{margin-top:0;}
+  .prose ul{margin:0;padding-left:20px;}
+  .prose li{margin:7px 0;font-size:14px;color:var(--text-2);}
+
+  .cta{display:flex;gap:10px;margin-top:30px;flex-wrap:wrap;}
+  .btn{height:40px;padding:0 18px;border-radius:10px;font-weight:600;font-size:14px;border:1px solid transparent;transition:.18s;display:inline-flex;align-items:center;}
+  .btn-primary{background:linear-gradient(180deg,#6258ea,#4338ca);color:#fff;border:1px solid rgba(0,0,0,.06);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 1px 2px rgba(16,24,40,.12),0 8px 14px -6px rgba(79,70,229,.55);}
+  .btn-primary:hover{background:linear-gradient(180deg,#5b51e6,#3a31bd);transform:translateY(-1px);}
+  .btn-ghost{background:var(--surface);border-color:var(--line-2);color:var(--text-2);} .btn-ghost:hover{border-color:#d3d5da;color:var(--text);}
+
+  @media(max-width:560px){.head__top{flex-wrap:wrap;}.verdict{margin-left:0;}.dround__b{padding-left:18px;}}
+</style>
+</head>
+<body>
+  <header class="topbar">
+    <a class="back" href="interview.html">← Experiences</a>
+    <div class="brand-word"><span class="tuf">take<b>U</b>forward</span></div>
+    <span class="crumb">/ Interview Experience / Google</span>
+  </header>
+
+  <div class="wrap">
+
+    <section class="head">
+      <div class="head__top">
+        <div class="logo" style="background:linear-gradient(180deg,#5b94f7,#4285f4)">G</div>
+        <div>
+          <h1>Google · Software Engineering Intern</h1>
+          <div class="sub">3 Rounds · 3 Problems</div>
+        </div>
+        <span class="verdict v-sel">Selected</span>
+      </div>
+      <div class="facts">
+        <span class="fact">Difficulty <b>Medium</b></span>
+        <span class="fact">Mode <b>Remote</b></span>
+        <span class="fact">Applied via <b>Referral</b></span>
+        <span class="fact">Timeline <b>3–4 weeks</b></span>
+      </div>
+      <div class="byline">
+        <span class="who">~Agrawal · Final-year student</span>
+        <span class="when">Posted 378 days ago</span>
+      </div>
+    </section>
+
+    <h2 class="sh">Interview rounds</h2>
+    <div class="rounds">
+      <div class="dround">
+        <div class="dround__h">
+          <div class="rn"><b>1</b><span>Round</span></div>
+          <div><div class="dround__t">Online Assessment</div><div class="dround__m">Duration 60 min · Mode Remote · 2 coding problems</div></div>
+          <span class="dif e">Easy</span>
+        </div>
+        <div class="dround__b">Two problems on arrays and strings. Straightforward once you spot the pattern — clean code and edge cases mattered more than speed.</div>
+      </div>
+      <div class="dround">
+        <div class="dround__h">
+          <div class="rn"><b>2</b><span>Round</span></div>
+          <div><div class="dround__t">Technical · DSA</div><div class="dround__m">Duration 60 min · Mode Remote · 0 coding problems</div></div>
+          <span class="dif m">Medium</span>
+        </div>
+        <div class="dround__b">A discussion-heavy round — walking through approaches, complexity trade-offs and reasoning out loud before writing anything down.</div>
+      </div>
+      <div class="dround">
+        <div class="dround__h">
+          <div class="rn"><b>3</b><span>Round</span></div>
+          <div><div class="dround__t">Problem Solving</div><div class="dround__m">Duration 60 min · Mode Remote · 1 coding problem</div></div>
+          <span class="dif h">Hard</span>
+        </div>
+        <div class="dround__b">One harder graph problem. The interviewer cared about how I handled edge cases and explained the solution, not just whether it ran.</div>
+      </div>
+    </div>
+
+    <h2 class="sh">Overall experience</h2>
+    <div class="prose">
+      <h3>Preparation tips</h3>
+      <ul>
+        <li>Focused deeply on Google-tagged problems, especially Strings, Graphs and Heap.</li>
+        <li>Practised mock interviews to get better at thinking and coding under 60-minute constraints.</li>
+        <li>Consistency mattered more than intensity.</li>
+        <li>Solving one high-quality problem daily helped far more than last-minute cramming.</li>
+      </ul>
+      <h3>General advice</h3>
+      <ul>
+        <li>Google interviews are fast-paced and time-bound, so practise with that environment in mind.</li>
+        <li>Don't underestimate edge-case discussions, dry runs, and being able to explain your solution with confidence.</li>
+      </ul>
+    </div>
+
+    <div class="cta">
+      <a class="btn btn-primary" href="interview.html">← Back to all experiences</a>
+      <a class="btn btn-ghost" href="dashboard.html">Go to dashboard</a>
+    </div>
+
+  </div>
+</body>
+</html>

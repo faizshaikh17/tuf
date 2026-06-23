@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Interview Experience takeUforward (Redesign Concept)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#f6f7f9;--surface:#fff;--surface-2:#fbfbfc;--surface-3:#f3f4f6;
+    --text:#0a0a0c;--text-2:#3f3f46;--muted:#6b7280;--faint:#9aa0ab;
+    --line:#ececef;--line-2:#e3e4e8;
+    --brand:#4f46e5;--brand-soft:#eef0fe;
+    --green:#0b9d6b;--green-soft:#e6f6ef;--amber:#d97706;--amber-soft:#fdf3e3;--rose:#e11d6b;
+    --shadow-sm:0 1px 2px rgba(10,10,12,.05),0 1px 3px rgba(10,10,12,.04);
+    --shadow:0 4px 12px -4px rgba(10,10,12,.08),0 2px 6px -2px rgba(10,10,12,.05);
+    --r:12px;--r-lg:18px;--top:60px;
+    --sans:"Inter",system-ui,sans-serif;--display:"Fraunces",Georgia,serif;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased;}
+  a{color:inherit;text-decoration:none;}
+  button{font-family:inherit;cursor:pointer;}
+  ::selection{background:var(--brand);color:#fff;}
+
+  .topbar{position:sticky;top:0;z-index:50;height:var(--top);background:rgba(246,247,249,.82);
+    backdrop-filter:saturate(1.4) blur(12px);-webkit-backdrop-filter:saturate(1.4) blur(12px);
+    border-bottom:1px solid var(--line);display:flex;align-items:center;gap:16px;padding:0 clamp(16px,4vw,40px);}
+  .back{height:36px;padding:0 14px;border-radius:9px;border:1px solid var(--line-2);background:var(--surface);
+    font-size:13.5px;font-weight:500;color:var(--text-2);box-shadow:var(--shadow-sm);transition:.16s;display:flex;align-items:center;}
+  .back:hover{color:var(--text);border-color:#d3d5da;}
+  .brand-word{font-weight:600;font-size:15px;display:flex;align-items:center;gap:7px;}
+  .brand-word .tuf{color:var(--brand);} .brand-word b{font-weight:700;}
+  .crumb{margin-left:4px;color:var(--faint);font-size:13.5px;}
+  .top-actions{margin-left:auto;display:flex;gap:10px;}
+  .btn{height:38px;padding:0 16px;border-radius:10px;font-weight:600;font-size:13.5px;border:1px solid transparent;transition:.18s;display:flex;align-items:center;}
+  .btn-primary{background:linear-gradient(180deg,#6258ea,#4338ca);color:#fff;border:1px solid rgba(0,0,0,.06);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 1px 2px rgba(16,24,40,.12),0 8px 14px -6px rgba(79,70,229,.55);}
+  .btn-primary:hover{background:linear-gradient(180deg,#5b51e6,#3a31bd);transform:translateY(-1px);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 2px 5px rgba(16,24,40,.14),0 11px 18px -6px rgba(79,70,229,.6);}
+  .btn-ghost{background:var(--surface);border-color:var(--line-2);color:var(--text-2);} .btn-ghost:hover{border-color:#d3d5da;color:var(--text);}
+
+  .wrap{max-width:1060px;margin:0 auto;padding:0 clamp(16px,4vw,40px);}
+  .hero{padding:clamp(36px,5vw,64px) 0 28px;}
+  .hero .ey{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--rose);}
+  .hero h1{font-family:var(--display);font-weight:600;font-size:clamp(30px,5vw,48px);letter-spacing:-.02em;margin:14px 0 10px;line-height:1.02;}
+  .hero p{color:var(--muted);font-size:16px;max-width:58ch;margin:0;}
+  .stats{display:flex;gap:32px;margin-top:26px;flex-wrap:wrap;}
+  .hstat b{font-size:22px;font-weight:700;letter-spacing:-.02em;}
+  .hstat span{display:block;font-size:12.5px;color:var(--muted);margin-top:2px;}
+
+  h2.sh{font-size:18px;font-weight:600;letter-spacing:-.02em;margin:6px 0 14px;}
+  .companies{display:grid;grid-template-columns:repeat(8,1fr);gap:10px;}
+  .co{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:16px 12px 14px;text-align:center;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.7),0 1px 2px rgba(16,24,40,.06),0 8px 16px -10px rgba(16,24,40,.22);transition:.18s;cursor:pointer;}
+  .co:hover{transform:translateY(-3px);box-shadow:inset 0 1px 0 rgba(255,255,255,.8),0 2px 5px rgba(16,24,40,.08),0 16px 26px -12px rgba(16,24,40,.3);border-color:var(--line-2);}
+  .co .logo{width:40px;height:40px;border-radius:11px;margin:0 auto 10px;display:grid;place-items:center;color:#fff;font-weight:700;font-size:16px;box-shadow:inset 0 1px 0 rgba(255,255,255,.32),0 5px 12px -6px rgba(0,0,0,.4);}
+  .co .nm{font-size:13px;font-weight:600;}
+  .co .type{display:inline-block;font-size:9.5px;font-weight:600;margin-top:6px;padding:2px 7px;border-radius:6px;}
+  .co .type.prod{background:var(--brand-soft);color:var(--brand);}
+  .co .type.serv{background:#fff7ed;color:#c2410c;}
+  .co .ct{font-size:11px;color:var(--muted);margin-top:6px;}
+
+  .toolbar{display:flex;align-items:center;gap:10px;margin:28px 0 18px;flex-wrap:wrap;}
+  .toolbar h2{font-size:18px;font-weight:600;letter-spacing:-.02em;margin:0;margin-right:auto;}
+  .select{height:36px;padding:0 13px;border-radius:9px;border:1px solid var(--line-2);background:var(--surface);font-size:13px;color:var(--text-2);font-weight:500;box-shadow:var(--shadow-sm);display:flex;align-items:center;}
+  .seg{display:flex;background:var(--surface-3);border-radius:9px;padding:3px;gap:2px;}
+  .seg button{border:0;background:transparent;height:30px;padding:0 13px;border-radius:7px;font-size:13px;font-weight:500;color:var(--muted);}
+  .seg button.on{background:var(--surface);color:var(--text);box-shadow:var(--shadow-sm);}
+
+  .layout{display:grid;grid-template-columns:minmax(0,1fr) 296px;gap:30px;padding-bottom:80px;}
+  .feed{display:flex;flex-direction:column;gap:14px;}
+  .exp{background:var(--surface);
+    border:1px solid var(--line);border-radius:var(--r-lg);padding:22px 24px;transition:.18s;display:block;color:inherit;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.7),0 1px 2px rgba(16,24,40,.06),0 8px 16px -8px rgba(16,24,40,.22);}
+  .exp:hover{transform:translateY(-2px);border-color:var(--line-2);box-shadow:inset 0 1px 0 rgba(255,255,255,.8),0 2px 5px rgba(16,24,40,.08),0 16px 28px -10px rgba(16,24,40,.3);}
+  .exp__top{display:flex;align-items:flex-start;gap:13px;}
+  .exp__logo{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;color:#fff;font-weight:700;font-size:15px;flex:none;box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 4px 10px -5px rgba(0,0,0,.4);}
+  .exp__more{color:var(--brand);font-weight:600;}
+  .exp__id h3{margin:0;font-size:16px;font-weight:600;letter-spacing:-.01em;}
+  .exp__id .meta{font-size:12.5px;color:var(--muted);margin-top:3px;}
+  .verdict{margin-left:auto;font-size:12px;font-weight:600;padding:5px 11px;border-radius:20px;white-space:nowrap;}
+  .v-sel{background:var(--green-soft);color:var(--green);} .v-rej{background:#fdecec;color:#dc2626;}
+  .tags{display:flex;gap:8px;margin:14px 0;flex-wrap:wrap;}
+  .tag2{font-size:11.5px;font-weight:500;color:var(--text-2);background:var(--surface-3);border:1px solid var(--line);border-radius:7px;padding:4px 9px;}
+  .exp__body{font-size:13.5px;color:var(--text-2);}
+  .exp__body ul{margin:0;padding-left:18px;}
+  .exp__body li{margin:5px 0;}
+  .exp__foot{display:flex;align-items:center;gap:16px;margin-top:16px;padding-top:14px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted);}
+  .exp__foot .acts{margin-left:auto;display:flex;gap:16px;}
+  .exp__foot .acts button{border:0;background:none;color:var(--muted);font-size:12.5px;font-weight:500;transition:.15s;}
+  .exp__foot .acts button:hover{color:var(--brand);}
+
+  .aside{align-self:start;position:sticky;top:calc(var(--top) + 24px);display:flex;flex-direction:column;gap:16px;}
+  .wcard{background:var(--surface);
+    border:1px solid var(--line);border-radius:var(--r-lg);padding:20px;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.7),0 1px 2px rgba(16,24,40,.06),0 8px 16px -10px rgba(16,24,40,.22);}
+  .wcard h3{margin:0 0 4px;font-size:14px;font-weight:600;}
+  .wcard p{margin:0 0 14px;font-size:12.5px;color:var(--muted);}
+  .rounds{display:flex;flex-direction:column;gap:8px;}
+  .round{border:1px solid var(--line);border-radius:10px;padding:11px 13px;background:var(--surface-2);}
+  .round .rh{display:flex;align-items:center;gap:10px;}
+  .round .rn{width:26px;height:26px;border-radius:8px;background:var(--brand-soft);color:var(--brand);display:grid;place-items:center;font-weight:700;font-size:12px;}
+  .round .rt{font-size:12.5px;font-weight:600;}
+  .round .rd{font-size:11px;color:var(--muted);margin-top:7px;}
+  .dif{font-size:10.5px;font-weight:600;padding:2px 7px;border-radius:6px;margin-left:auto;}
+  .dif.m{background:var(--amber-soft);color:var(--amber);} .dif.e{background:var(--green-soft);color:var(--green);} .dif.h{background:#fdecec;color:#dc2626;}
+
+  @media(max-width:900px){.companies{grid-template-columns:repeat(4,1fr);}.layout{grid-template-columns:1fr;}.aside{position:static;flex-direction:row;flex-wrap:wrap;}.aside .wcard{flex:1;min-width:240px;}}
+  @media(max-width:560px){.companies{grid-template-columns:repeat(2,1fr);}.crumb{display:none;}}
+</style>
+</head>
+<body>
+  <header class="topbar">
+    <a class="back" href="dashboard.html">← Dashboard</a>
+    <div class="brand-word"><span class="tuf">take<b>U</b>forward</span></div>
+    <span class="crumb">/ Interview Experience</span>
+    <div class="top-actions">
+      <button class="btn btn-ghost">Filters</button>
+      <button class="btn btn-primary">Submit yours</button>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <section class="hero">
+      <div class="ey">Interview Experience</div>
+      <h1>Ace your interview with<br>real interview stories.</h1>
+      <p>Turn your placement story into someone's prep guide round-by-round breakdowns from people who just sat in the room.</p>
+      <div class="stats">
+        <div class="hstat"><b>1,427</b><span>Experiences shared</span></div>
+        <div class="hstat"><b>180+</b><span>Companies covered</span></div>
+        <div class="hstat"><b>62%</b><span>Resulted in an offer</span></div>
+      </div>
+    </section>
+
+    <h2 class="sh">Popular companies</h2>
+    <div class="companies">
+      <div class="co"><div class="logo" style="background:linear-gradient(180deg,#ffac33,#ff9900)">A</div><div class="nm">Amazon</div><div class="type prod">Product</div><div class="ct">51 experiences</div></div>
+      <div class="co"><div class="logo" style="background:linear-gradient(180deg,#37b6f5,#00a4ef)">M</div><div class="nm">Microsoft</div><div class="type prod">Product</div><div class="ct">30 experiences</div></div>
+      <div class="co"><div class="logo" style="background:linear-gradient(180deg,#5b94f7,#4285f4)">G</div><div class="nm">Google</div><div class="type prod">Product</div><div class="ct">21 experiences</div></div>
+      <div class="co"><div class="logo" style="background:linear-gradient(180deg,#d65a4b,#c74634)">O</div><div class="nm">Oracle</div><div class="type prod">Product</div><div class="ct">17 experiences</div></div>
+      <div class="co"><div class="logo" style="background:linear-gradient(180deg,#8294c4,#6b7db3)">G</div><div class="nm">Goldman Sachs</div><div class="type serv">Service</div><div class="ct">12 experiences</div></div>
+      <div class="co"><div class="logo" style="background:linear-gradient(180deg,#333,#000)">U</div><div class="nm">Uber</div><div class="type prod">Product</div><div class="ct">11 experiences</div></div>
+      <div class="co"><div class="logo" style="background:linear-gradient(180deg,#7635b8,#5f259f)">P</div><div class="nm">PhonePe</div><div class="type prod">Product</div><div class="ct">10 experiences</div></div>
+      <div class="co"><div class="logo" style="background:linear-gradient(180deg,#3b88f5,#1877f2)">M</div><div class="nm">Meta</div><div class="type prod">Product</div><div class="ct">10 experiences</div></div>
+    </div>
+
+    <div class="toolbar">
+      <h2>Experiences</h2>
+      <div class="select">Difficulty ▾</div>
+      <div class="select">Role ▾</div>
+      <div class="seg"><button class="on">Most upvoted</button><button>Recent</button></div>
+    </div>
+
+    <div class="layout">
+      <div class="feed">
+
+        <a class="exp" href="interview-experience.html">
+          <div class="exp__top">
+            <div class="exp__logo" style="background:linear-gradient(180deg,#5b94f7,#4285f4)">G</div>
+            <div class="exp__id">
+              <h3>Google · Software Engineering Intern</h3>
+              <div class="meta">3 rounds · 3 problems</div>
+            </div>
+            <span class="verdict v-sel">Selected</span>
+          </div>
+          <div class="tags"><span class="tag2">Medium</span><span class="tag2">Remote</span><span class="tag2">0–1 years</span><span class="tag2">Referral</span></div>
+          <div class="exp__body"><ul>
+            <li>Google interviews are fast-paced and time-bound practice with that environment in mind.</li>
+            <li>Don't underestimate edge-case discussions and explaining your solution clearly.</li>
+          </ul></div>
+          <div class="exp__foot">~Agrawal · Final-year student · 380 days ago<div class="acts"><span>▲ 389</span><span class="exp__more">Read full →</span></div></div>
+        </a>
+
+        <a class="exp" href="interview-experience.html">
+          <div class="exp__top">
+            <div class="exp__logo" style="background:linear-gradient(180deg,#ffac33,#ff9900)">A</div>
+            <div class="exp__id">
+              <h3>Amazon · SDE Intern (6 months)</h3>
+              <div class="meta">1 round · 2 problems</div>
+            </div>
+            <span class="verdict v-sel">Selected</span>
+          </div>
+          <div class="tags"><span class="tag2">Medium</span><span class="tag2">Remote</span><span class="tag2">0–1 years</span></div>
+          <div class="exp__body"><ul>
+            <li>One online assessment with two problems focus on arrays, strings and clean code.</li>
+            <li>Leadership Principle questions still come up; keep two STAR stories ready.</li>
+          </ul></div>
+          <div class="exp__foot">Anonymous · Pre-final year · 379 days ago<div class="acts"><span>▲ 237</span><span class="exp__more">Read full →</span></div></div>
+        </a>
+
+        <a class="exp" href="interview-experience.html">
+          <div class="exp__top">
+            <div class="exp__logo" style="background:linear-gradient(180deg,#5b94f7,#4285f4)">G</div>
+            <div class="exp__id">
+              <h3>Google · Software Engineer (L4)</h3>
+              <div class="meta">5 rounds · 0 problems</div>
+            </div>
+            <span class="verdict v-rej">Rejected</span>
+          </div>
+          <div class="tags"><span class="tag2">Medium</span><span class="tag2">Remote</span><span class="tag2">2–3 years</span></div>
+          <div class="exp__body"><ul>
+            <li>Solving quickly isn't enough understand problems deeply and learn from failures.</li>
+            <li>Don't ignore fundamentals; not revisiting them in college cost me this one.</li>
+          </ul></div>
+          <div class="exp__foot">Anonymous · SWE at PBC · 389 days ago<div class="acts"><span>▲ 73</span><span class="exp__more">Read full →</span></div></div>
+        </a>
+
+      </div>
+
+      <aside class="aside">
+        <div class="wcard">
+          <h3>Google SE Intern · rounds</h3>
+          <p>How one experience expands.</p>
+          <div class="rounds">
+            <div class="round"><div class="rh"><span class="rn">1</span><span class="rt">Round 1</span><span class="dif e">Easy</span></div><div class="rd">60 min · Remote · 2 coding</div></div>
+            <div class="round"><div class="rh"><span class="rn">2</span><span class="rt">Round 2</span><span class="dif m">Medium</span></div><div class="rd">60 min · Remote · 0 coding</div></div>
+            <div class="round"><div class="rh"><span class="rn">3</span><span class="rt">Round 3</span><span class="dif h">Hard</span></div><div class="rd">60 min · Remote · 1 coding</div></div>
+          </div>
+        </div>
+        <div class="wcard">
+          <h3>Preparation tips</h3>
+          <p style="margin:0">Focus on Google-tagged Strings, Graphs &amp; Heap problems. Practise thinking and coding under a 60-minute clock.</p>
+        </div>
+      </aside>
+    </div>
+  </div>
+</body>
+</html>
