@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Field Notes — On takeUforward, and how aspirants actually learn</title>
+<meta name="description" content="A long-form field report and open letter on takeUforward: observations, pain points, product gaps, and constructive recommendations from someone who spent weeks inside the platform." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --paper:#ffffff;
+    --paper-2:#f6f7f9;
+    --paper-3:#eceef2;
+    --ink:#0a0a0b;
+    --ink-2:#1b1b1f;
+    --body:#3f3f46;
+    --muted:#71717a;
+    --muted-2:#a1a1aa;
+    --coral:#2563eb;
+    --coral-deep:#1d4ed8;
+    --accent-bright:#6b9bff;
+    --periwinkle:#7d93ff;
+    --gold:#6b9bff;
+    --dark:#0b0b10;
+    --dark-2:#15151b;
+    --line:rgba(9,9,11,.11);
+    --line-soft:rgba(9,9,11,.06);
+    --hl:#2563eb;
+    --c1:#2563eb;--c2:#f59e0b;--c3:#f43f5e;--c4:#fb6514;--c5:#7c3aed;--c6:#0d9488;
+    --maxw:1160px;
+    --gutter:clamp(20px,5vw,72px);
+    --serif:"Spectral",Georgia,serif;
+    --display:"Fraunces","Spectral",Georgia,serif;
+    --sans:"Inter",system-ui,-apple-system,sans-serif;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--body);
+    font-family:var(--serif);
+    font-size:18px;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+    font-feature-settings:"liga" 1,"kern" 1;
+  }
+  ::selection{background:var(--coral);color:#fff;}
+
+  /* ---------- reading progress ---------- */
+  .progress{
+    position:fixed;top:0;left:0;height:2px;width:0%;
+    background:var(--coral);z-index:120;transition:width .12s linear;
+  }
+
+  /* ---------- nav ---------- */
+  .nav{
+    position:sticky;top:0;z-index:100;
+    background:color-mix(in srgb,var(--paper) 86%,transparent);
+    backdrop-filter:saturate(1.2) blur(10px);
+    -webkit-backdrop-filter:saturate(1.2) blur(10px);
+    border-bottom:1px solid var(--line-soft);
+  }
+  .nav__inner{
+    max-width:var(--maxw);margin:0 auto;
+    padding:16px var(--gutter);
+    display:flex;align-items:center;justify-content:space-between;gap:24px;
+  }
+  .brand{display:flex;align-items:center;gap:10px;font-family:var(--display);
+    font-style:italic;font-weight:500;font-size:19px;color:var(--ink);letter-spacing:.2px;}
+  .brand .dot{width:9px;height:9px;border-radius:50%;background:var(--coral);flex:none;
+    box-shadow:0 0 0 4px rgba(32,86,240,.18);}
+  .nav__links{display:flex;align-items:center;gap:30px;}
+  .nav__links a{
+    font-family:var(--sans);font-size:12.5px;font-weight:500;letter-spacing:.02em;
+    color:var(--muted);text-decoration:none;position:relative;padding:4px 0;transition:color .2s;
+  }
+  .nav__links a::after{content:"";position:absolute;left:0;right:100%;bottom:-2px;height:1px;
+    background:var(--coral);transition:right .25s ease;}
+  .nav__links a:hover{color:var(--ink);}
+  .nav__links a.active{color:var(--ink);}
+  .nav__links a.active::after{right:0;}
+  .nav__vol{font-family:var(--sans);font-size:11px;letter-spacing:.28em;color:var(--muted-2);}
+  .nav__menu-btn{display:none;}
+
+  /* ---------- layout primitives ---------- */
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 var(--gutter);}
+  section{scroll-margin-top:80px;}
+  .rule{height:0;background:none;border:0;border-top:1px dashed var(--line);margin:0;}
+  .eyebrow{
+    font-family:var(--sans);font-size:11.5px;font-weight:600;letter-spacing:.26em;
+    text-transform:uppercase;color:var(--coral);display:inline-flex;align-items:center;gap:12px;
+  }
+  .eyebrow.muted{color:var(--muted-2);}
+  .eyebrow .num{color:var(--ink);}
+  .lede{font-size:clamp(19px,2.1vw,22px);line-height:1.6;color:var(--ink-2);}
+  .small{font-family:var(--sans);font-size:13px;letter-spacing:.02em;color:var(--muted);}
+
+  mark{background:var(--coral);color:#fff;padding:.05em .3em;border-radius:4px;
+    -webkit-box-decoration-break:clone;box-decoration-break:clone;}
+  em.c{color:var(--coral);font-style:italic;}
+  strong{font-weight:600;color:var(--ink);}
+
+  /* two-column magazine grid */
+  .mag{display:grid;grid-template-columns:minmax(0,0.92fr) minmax(0,1.25fr);gap:clamp(28px,6vw,88px);align-items:start;}
+  .mag__aside{position:sticky;top:96px;}
+
+  h2.display{
+    font-family:var(--display);font-weight:430;
+    font-size:clamp(34px,5.2vw,62px);line-height:1.02;letter-spacing:-.015em;
+    color:var(--ink);margin:14px 0 0;
+    font-optical-sizing:auto;
+  }
+  h3.kicker{font-family:var(--display);font-weight:450;font-size:clamp(26px,3vw,32px);
+    line-height:1.08;letter-spacing:-.01em;color:var(--ink);margin:12px 0 0;}
+  p{margin:0 0 20px;}
+  p:last-child{margin-bottom:0;}
+
+  /* ---------- hero ---------- */
+  .hero{padding:clamp(64px,9vw,120px) 0 clamp(44px,6vw,72px);}
+  .hero__crumb{font-family:var(--sans);font-size:12px;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--muted-2);display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+  .hero__crumb .sep{width:40px;height:1px;background:var(--line);display:inline-block;}
+  .hero h1{
+    font-family:var(--display);font-weight:400;
+    font-size:clamp(46px,8.4vw,108px);line-height:.98;letter-spacing:-.02em;
+    color:var(--ink);margin:28px 0 0;max-width:14ch;
+  }
+  .hero h1 em{font-style:italic;color:var(--coral);font-weight:430;}
+  .hero__sub{margin-top:34px;max-width:60ch;font-size:clamp(18px,2vw,21px);line-height:1.62;color:var(--ink-2);}
+  .hero__meta{margin-top:40px;display:flex;flex-wrap:wrap;gap:28px 48px;border-top:1px solid var(--line);padding-top:26px;}
+  .hero__meta div{display:flex;flex-direction:column;gap:4px;}
+  .hero__meta dt{font-family:var(--sans);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted-2);}
+  .hero__meta dd{margin:0;font-size:16px;color:var(--ink);}
+
+  /* ---------- generic section ---------- */
+  .band{padding:clamp(56px,8vw,104px) 0;}
+  .band--alt{background:var(--paper-2);border-top:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft);}
+
+  /* drop cap */
+  .dropcap::first-letter{
+    font-family:var(--display);float:left;font-size:5.4em;line-height:.78;font-weight:500;
+    padding:8px 14px 0 0;color:var(--coral);
+  }
+
+  /* ---------- stats row ---------- */
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);
+    border:1px solid var(--line);margin-top:8px;}
+  .stat{background:var(--paper);padding:26px 24px;}
+  .band--alt .stat{background:var(--paper-2);}
+  .stat .n{font-family:var(--display);font-size:clamp(34px,4.5vw,48px);line-height:1;color:var(--ink);letter-spacing:-.02em;}
+  .stat .n .u{color:var(--coral);}
+  .stat .l{font-family:var(--sans);font-size:12.5px;color:var(--muted);margin-top:10px;line-height:1.45;}
+
+  /* ---------- comparison cards (a / b) ---------- */
+  .cmp{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:36px;}
+  .cmp .card{border:1px solid var(--line);padding:30px 28px 32px;background:var(--paper);min-height:230px;display:flex;flex-direction:column;}
+  .cmp .card.dark{background:var(--dark);border-color:transparent;color:#d4d4d8;}
+  .cmp .glyph{font-family:var(--display);font-size:46px;line-height:1;color:var(--coral);}
+  .cmp .card.dark .glyph{color:var(--gold);}
+  .cmp h4{font-family:var(--display);font-weight:480;font-size:21px;color:var(--ink);margin:18px 0 12px;}
+  .cmp .card.dark h4{color:#fafafa;}
+  .cmp p{font-size:15.5px;line-height:1.6;color:var(--body);margin:0;}
+  .cmp .card.dark p{color:#a1a1aa;}
+  .cmp__foot{margin-top:24px;font-size:16px;color:var(--ink-2);}
+
+  /* ---------- observation cards grid ---------- */
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:40px;}
+  .ocard{border:1px solid var(--line);background:var(--paper);padding:28px 26px 30px;display:flex;flex-direction:column;transition:transform .25s ease,box-shadow .25s ease;}
+  .band--alt .ocard{background:var(--paper);}
+  .ocard:hover{transform:translateY(-3px);box-shadow:0 18px 40px -28px rgba(9,9,11,.35);border-color:rgba(37,99,235,.4);}
+  .ocard .ic{width:30px;height:30px;color:var(--coral);}
+  .ocard h4{font-family:var(--display);font-weight:480;font-size:20px;color:var(--ink);margin:18px 0 10px;letter-spacing:-.01em;}
+  .ocard p{font-size:15px;line-height:1.58;margin:0;color:var(--body);}
+  .ocard .tag{font-family:var(--sans);font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted-2);margin-top:auto;padding-top:18px;}
+
+  /* ---------- dark pull-quote section ---------- */
+  .dark-band{background:var(--dark);color:#e4e4e7;padding:clamp(70px,10vw,130px) 0;}
+  .dark-band .eyebrow{color:var(--gold);}
+  .pull{font-family:var(--display);font-weight:380;
+    font-size:clamp(30px,4.6vw,56px);line-height:1.14;letter-spacing:-.01em;color:#fafafa;
+    max-width:18ch;margin:26px 0 0;}
+  .pull em{font-style:italic;color:var(--accent-bright);}
+  .pull .red{color:var(--periwinkle);font-style:italic;}
+  .quote-mark{font-family:var(--display);font-size:60px;line-height:.6;color:var(--periwinkle);}
+  .dark-band .attrib{font-family:var(--sans);font-size:11.5px;letter-spacing:.24em;text-transform:uppercase;color:#a1a1aa;margin-top:40px;}
+
+  /* ---------- numbered recommendations ---------- */
+  .recs{margin-top:24px;border-top:1px solid var(--line);}
+  .rec{display:grid;grid-template-columns:64px 150px 1fr;gap:clamp(16px,4vw,48px);
+    padding:34px 0;border-bottom:1px solid var(--line);align-items:start;}
+  .rec__n{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;
+    font-family:var(--sans);font-weight:600;font-size:17px;color:#fff;background:var(--c1);line-height:1;
+    box-shadow:0 6px 16px -8px var(--c1);}
+  .recs .rec:nth-of-type(1) .rec__n{background:var(--c1);box-shadow:0 6px 16px -8px var(--c1);}
+  .recs .rec:nth-of-type(2) .rec__n{background:var(--c2);box-shadow:0 6px 16px -8px var(--c2);}
+  .recs .rec:nth-of-type(3) .rec__n{background:var(--c3);box-shadow:0 6px 16px -8px var(--c3);}
+  .recs .rec:nth-of-type(4) .rec__n{background:var(--c4);box-shadow:0 6px 16px -8px var(--c4);}
+  .recs .rec:nth-of-type(5) .rec__n{background:var(--c5);box-shadow:0 6px 16px -8px var(--c5);}
+  .recs .rec:nth-of-type(6) .rec__n{background:var(--c6);box-shadow:0 6px 16px -8px var(--c6);}
+  .rec__cat{display:flex;flex-direction:column;align-items:flex-start;gap:14px;}
+  .rec__cat .ic{width:30px;height:30px;color:var(--ink);opacity:.7;}
+  .rec__cat .lbl{font-family:var(--sans);font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted-2);}
+  .rec h4{font-family:var(--display);font-weight:470;font-size:clamp(22px,2.4vw,27px);color:var(--ink);margin:0 0 12px;letter-spacing:-.01em;}
+  .rec p{font-size:16px;line-height:1.62;margin:0;color:var(--body);}
+  .rec p + p{margin-top:10px;}
+
+  /* ---------- before / after ---------- */
+  .ba{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:40px;}
+  .ba__col{border:1px solid var(--line);padding:0;overflow:hidden;background:var(--paper);}
+  .ba__col.after{border-color:var(--coral);box-shadow:0 0 0 1px var(--coral) inset;}
+  .ba__head{padding:18px 26px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;}
+  .ba__col.after .ba__head{border-bottom-color:rgba(32,86,240,.3);}
+  .ba__head .t{font-family:var(--sans);font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted);}
+  .ba__col.after .ba__head .t{color:var(--coral);}
+  .ba__head .pill{font-family:var(--sans);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+    border:1px solid var(--line);border-radius:20px;padding:3px 10px;color:var(--muted);}
+  .ba__col.after .ba__head .pill{border-color:var(--coral);color:var(--coral);}
+  .ba__body{padding:26px;}
+  .ba__body ul{list-style:none;margin:0;padding:0;}
+  .ba__body li{display:flex;gap:12px;font-size:15.5px;line-height:1.5;padding:11px 0;border-bottom:1px solid var(--line-soft);color:var(--body);}
+  .ba__body li:last-child{border-bottom:0;}
+  .ba__body li .m{flex:none;color:var(--muted-2);font-family:var(--sans);font-size:15px;line-height:1.5;}
+  .ba__col.after .ba__body li .m{color:var(--coral);}
+
+  /* ---------- mock screenshot ---------- */
+  .shot{margin-top:40px;display:grid;grid-template-columns:1.35fr .85fr;gap:36px;align-items:center;}
+  .browser{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff;box-shadow:0 30px 60px -40px rgba(9,9,11,.4);}
+  .browser__bar{background:var(--paper-3);padding:11px 14px;display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--line);}
+  .browser__dots{display:flex;gap:6px;}
+  .browser__dots i{width:10px;height:10px;border-radius:50%;background:#d4d4d8;display:block;}
+  .browser__url{flex:1;background:var(--paper);border-radius:6px;font-family:var(--sans);font-size:11.5px;color:var(--muted);padding:5px 12px;border:1px solid var(--line-soft);}
+  .browser__view{padding:22px;background:#fff;}
+  .mockrow{display:flex;align-items:center;gap:12px;padding:11px 12px;border:1px solid var(--line-soft);border-radius:7px;margin-bottom:9px;background:#f6f7f9;}
+  .mockrow:last-child{margin-bottom:0;}
+  .mockrow .chk{width:18px;height:18px;border-radius:4px;border:1.5px solid var(--coral);flex:none;}
+  .mockrow.done .chk{background:var(--coral);}
+  .mockrow .bar{height:9px;border-radius:4px;background:#e4e4e7;}
+  .mockrow .bar.w1{width:55%;} .mockrow .bar.w2{width:38%;} .mockrow .bar.w3{width:70%;}
+  .mockrow .tagm{margin-left:auto;font-family:var(--sans);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted-2);}
+  .mocktitle{font-family:var(--display);font-size:19px;color:var(--ink);margin-bottom:16px;}
+  .annes{display:flex;flex-direction:column;gap:22px;}
+  .anne{position:relative;padding-left:26px;}
+  .anne::before{content:"";position:absolute;left:0;top:6px;width:11px;height:11px;border-radius:50%;
+    border:2px solid var(--coral);}
+  .anne h5{font-family:var(--sans);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--coral);margin:0 0 6px;}
+  .anne p{font-size:14.5px;line-height:1.55;margin:0;color:var(--body);}
+
+  /* ---------- full-bleed bold idea ---------- */
+  .feature{background:var(--coral);color:#fff;padding:clamp(64px,9vw,116px) 0;}
+  .feature .eyebrow{color:rgba(255,255,255,.78);}
+  .feature .mag{align-items:start;}
+  .feature h2.display{color:#fff;}
+  .feature .lede{color:rgba(255,255,255,.94);}
+  .feature p{color:rgba(255,255,255,.88);}
+  .feature a.inl{color:#fff;text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px;}
+  .feature strong{color:#fff;}
+
+  /* ---------- rollout ---------- */
+  .ps{margin-top:48px;border-left:2px solid var(--coral);padding:6px 0 6px 26px;max-width:70ch;}
+  .ps .lbl{font-family:var(--sans);font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted-2);margin-bottom:12px;}
+  .ps p{font-size:clamp(17px,1.9vw,19px);line-height:1.6;color:var(--ink-2);margin:0;}
+
+  /* ---------- footer ---------- */
+  .foot{padding:40px 0;border-top:1px solid var(--line);}
+  .foot__inner{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;}
+  .foot .brand{font-size:16px;}
+  .foot .meta{font-family:var(--sans);font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted-2);}
+
+  /* ---------- reveal ---------- */
+  .reveal{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease;}
+  .reveal.in{opacity:1;transform:none;}
+  @media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none;}html{scroll-behavior:auto;}}
+
+  /* ---------- responsive ---------- */
+  @media(max-width:880px){
+    body{font-size:17px;}
+    .mag{grid-template-columns:1fr;gap:18px;}
+    .mag__aside{position:static;}
+    .stats{grid-template-columns:1fr 1fr;}
+    .cmp,.grid3,.ba,.shot{grid-template-columns:1fr;}
+    .shot{gap:26px;}
+    .rec{grid-template-columns:42px 1fr;grid-row-gap:6px;}
+    .rec__cat{flex-direction:row;align-items:center;grid-column:2;}
+    .rec__cat .ic{display:none;}
+    .rec h4,.rec p{grid-column:1 / -1;}
+    .nav__links{display:none;}
+    .nav__menu-btn{display:none;}
+  }
+  @media(max-width:560px){
+    .stats{grid-template-columns:1fr 1fr;}
+    .hero__meta{gap:20px 30px;}
+    .dropcap::first-letter{font-size:4.4em;}
+  }
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+
+<!-- ============ NAV ============ -->
+<header class="nav">
+  <div class="nav__inner">
+    <a class="brand" href="#top" style="text-decoration:none;"><span class="dot"></span>Field Notes</a>
+    <nav class="nav__links" id="navlinks">
+      <a href="#research">Research</a>
+      <a href="#observations">Observations</a>
+      <a href="#problem">The Problem</a>
+      <a href="#recommendations">Recommendations</a>
+      <a href="#rollout">Rollout</a>
+    </nav>
+    <span class="nav__vol">VOL. 01</span>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<a id="top"></a>
+<section class="hero wrap">
+  <div class="hero__crumb">
+    <span>Product Research</span><span class="sep"></span><span>takeUforward · DSA</span>
+  </div>
+  <h1>On <em>takeUforward</em>, and how aspirants actually learn.</h1>
+  <p class="hero__sub">A field report and quiet open letter from someone who spent a few weeks living inside the platform — with notes from <mark>real study sessions, sheet attempts and getting-unstuck moments</mark> on what already works beautifully, where learners stall, and what could help the next cohort actually finish.</p>
+  <dl class="hero__meta">
+    <div><dt>Subject</dt><dd>takeUforward (TUF / TUF+)</dd></div>
+    <div><dt>Method</dt><dd>Hands-on usage · sheet walkthroughs</dd></div>
+    <div><dt>Scope</dt><dd>DSA · CS Core · System Design</dd></div>
+    <div><dt>Posture</dt><dd>Constructive · founder-facing</dd></div>
+  </dl>
+</section>
+
+<hr class="rule" />
+
+<!-- ============ 01 CONTEXT ============ -->
+<section class="band wrap" id="context">
+  <div class="mag">
+    <div class="mag__aside">
+      <span class="eyebrow"><span class="num">01</span> · Context</span>
+      <h2 class="display">A short hello.</h2>
+    </div>
+    <div class="reveal">
+      <p class="dropcap">The first time I opened takeUforward, I was preparing for interviews myself. Like a lot of people in this loop, I had bookmarked the A2Z sheet, half-finished a few topics, and quietly returned every time placement season got real. Since then I've kept coming back — first as a learner, lately as someone who can't help studying the product as much as the problems.</p>
+      <p>What follows isn't a critique. It's closer to a letter. I genuinely admire what's been built here: a free, structured, opinionated path through one of the most intimidating subjects in a young engineer's life. Very few resources have earned that kind of trust. So everything below is written in that spirit — <strong>I noticed a few things, I have a few ideas, and I'd love for them to be useful.</strong></p>
+      <p>I spent real time inside the sheets and the core-subject content, watched where my own attention drifted, and paid attention to the small moments where momentum either built or quietly broke. These are those notes.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="rule" />
+
+<!-- ============ 02 RESEARCH ============ -->
+<section class="band band--alt" id="research">
+  <div class="wrap">
+    <div class="mag">
+      <div class="mag__aside">
+        <span class="eyebrow"><span class="num">02</span> · Research</span>
+        <h2 class="display">Aspirants live or die by their momentum.</h2>
+      </div>
+      <div class="reveal">
+        <p>A learning platform works <em class="c">iff</em> people keep returning to it. The content can be world-class, but if a learner loses the thread for two weeks, the cost of re-entry decides whether they ever finish. So I watched the platform less for <em>what it teaches</em> and more for <em>what keeps people coming back</em>.</p>
+        <p>The pattern split cleanly into <strong>two kinds of learners</strong>: those who have already built a study habit, and those still trying to form one. takeUforward serves the first group brilliantly. The second group is where the opportunity lives.</p>
+      </div>
+    </div>
+
+    <div class="cmp reveal">
+      <div class="card">
+        <div class="glyph">a.</div>
+        <h4>The consistent grinder</h4>
+        <p>Already disciplined. They treat the A2Z / SDE sheet as a checklist and love it — the structure, the ordering, the "one trusted path" feeling. For them the platform is close to perfect. They rarely need hand-holding; they need depth, and they get it.</p>
+      </div>
+      <div class="card dark">
+        <div class="glyph">b.</div>
+        <h4>The overwhelmed beginner</h4>
+        <p>Motivated but fragile. They open ~450 problems, feel the weight of it, solve a few, and disappear. To them the sheet isn't a path — it's a wall. They don't need more content; they need a sense that the next <em>right</em> step is small and obvious.</p>
+      </div>
+    </div>
+    <p class="cmp__foot reveal">Both groups respect the quality. The difference isn't the teaching — <strong>it's the on-ramp.</strong> Most people who leave don't leave because the content failed them. They leave because they lost the thread and re-entry felt expensive.</p>
+
+    <div class="stats reveal" style="margin-top:48px;">
+      <div class="stat"><div class="n">450<span class="u">+</span></div><div class="l">structured problems in the A2Z path — a strength and, for some, a wall</div></div>
+      <div class="stat"><div class="n">3<span class="u">×</span></div><div class="l">formats per concept: video, article, and practice — a real differentiator</div></div>
+      <div class="stat"><div class="n">5</div><div class="l">core surfaces to navigate: DSA, CN, OS, DBMS, System Design</div></div>
+      <div class="stat"><div class="n">~2<span class="u">wk</span></div><div class="l">typical gap after which re-entry friction quietly ends a streak</div></div>
+    </div>
+    <p class="small reveal" style="margin-top:14px;">Figures are directional, drawn from hands-on observation rather than internal analytics — offered as a lens, not a measurement.</p>
+  </div>
+</section>
+
+<hr class="rule" />
+
+<!-- ============ WHAT WORKS / OBSERVATIONS ============ -->
+<section class="band wrap" id="observations">
+  <span class="eyebrow"><span class="num">03</span> · Observations</span>
+  <h2 class="display" style="max-width:18ch;">First, the things that quietly work.</h2>
+  <p class="lede reveal" style="margin-top:22px;max-width:64ch;">Before any suggestions, it's worth naming what's genuinely excellent — because the recommendations later are about protecting these strengths, not replacing them.</p>
+
+  <div class="grid3">
+    <article class="ocard reveal">
+      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 5h16M4 12h16M4 19h10" stroke-linecap="round"/></svg>
+      <h4>One trusted path</h4>
+      <p>The A2Z and SDE sheets remove the hardest decision a beginner faces: <em>what do I do next?</em> A single, opinionated ordering is worth more than ten "complete" resources.</p>
+      <span class="tag">Strength · Structure</span>
+    </article>
+    <article class="ocard reveal">
+      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M10 21h4M9 9l4 2.5L9 14V9z" stroke-linejoin="round"/></svg>
+      <h4>Three formats, one concept</h4>
+      <p>Video, written article, and a practice link for the same topic. Learners self-select the format that fits their mood — a rare, genuinely thoughtful detail.</p>
+      <span class="tag">Strength · Pedagogy</span>
+    </article>
+    <article class="ocard reveal">
+      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3l2.5 5.5L20 9l-4 4 1 6-5-3-5 3 1-6-4-4 5.5-.5L12 3z" stroke-linejoin="round"/></svg>
+      <h4>Earned trust</h4>
+      <p>The brand feels like a senior who's been through it, not a marketer. That credibility is the platform's deepest moat — and it's hard to buy.</p>
+      <span class="tag">Strength · Brand</span>
+    </article>
+    <article class="ocard reveal">
+      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 19V5a2 2 0 012-2h9l5 5v11a2 2 0 01-2 2H6a2 2 0 01-2-2z"/><path d="M14 3v6h6"/></svg>
+      <h4>Depth on tap</h4>
+      <p>Core CS subjects — OS, CN, DBMS — sit alongside DSA. For interview prep, having one home for all of it reduces the tab-chaos every aspirant knows too well.</p>
+      <span class="tag">Strength · Coverage</span>
+    </article>
+    <article class="ocard reveal">
+      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2" stroke-linecap="round"/></svg>
+      <h4>Free, by default</h4>
+      <p>The most valuable parts are open to anyone. That generosity is why the audience arrived — and why they extend goodwill the moment something paid appears.</p>
+      <span class="tag">Strength · Access</span>
+    </article>
+    <article class="ocard reveal">
+      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 17l5-5 4 4 7-7" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 9h6v6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <h4>Visible progress</h4>
+      <p>Ticking problems off a sheet is quietly addictive. The checkbox is doing real psychological work — and it's the hook future features should build on.</p>
+      <span class="tag">Strength · Motivation</span>
+    </article>
+  </div>
+</section>
+
+<!-- ============ THE PROBLEM (dark pull quote) ============ -->
+<section class="dark-band" id="problem">
+  <div class="wrap">
+    <div class="mag">
+      <div class="mag__aside">
+        <span class="eyebrow"><span class="num">04</span> · The Problem</span>
+      </div>
+      <div class="reveal">
+        <div class="quote-mark">&#8220;</div>
+        <p class="pull">Most people who leave don't leave because the content is <em>too hard</em>. They leave because they <span class="red">lost the thread</span> — and nothing on the page made coming back feel small.</p>
+        <p class="attrib">Recurring pattern across study sessions</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PAIN POINTS ============ -->
+<section class="band wrap" id="pain">
+  <div class="mag">
+    <div class="mag__aside">
+      <span class="eyebrow"><span class="num">05</span> · Pain Points</span>
+      <h2 class="display">Where momentum quietly breaks.</h2>
+    </div>
+    <div class="reveal">
+      <p>None of these are failures. They're the friction that naturally accumulates as a beloved resource grows. I've grouped what I noticed into the moments where a motivated learner is most likely to drift.</p>
+    </div>
+  </div>
+
+  <div class="grid3" style="margin-top:44px;">
+    <article class="ocard reveal">
+      <span class="tag" style="padding-top:0;color:var(--coral);">Pain · Re-entry</span>
+      <h4 style="margin-top:14px;">"Where was I?"</h4>
+      <p>After a break, there's no single "resume here" surface. The learner has to reconstruct their own position in the sheet — a small tax that, repeated, ends streaks.</p>
+    </article>
+    <article class="ocard reveal">
+      <span class="tag" style="padding-top:0;color:var(--coral);">Pain · Scale</span>
+      <h4 style="margin-top:14px;">The wall effect</h4>
+      <p>Seeing the full sheet at once is motivating for some and paralysing for others. Beginners need the path to <em>feel</em> shorter than it is on day one.</p>
+    </article>
+    <article class="ocard reveal">
+      <span class="tag" style="padding-top:0;color:var(--coral);">Pain · Retention</span>
+      <h4 style="margin-top:14px;">Solved, then forgotten</h4>
+      <p>A problem ticked three weeks ago is often gone by interview week. There's no gentle nudge to revisit — revision is left entirely to the learner's willpower.</p>
+    </article>
+    <article class="ocard reveal">
+      <span class="tag" style="padding-top:0;color:var(--coral);">Pain · Wayfinding</span>
+      <h4 style="margin-top:14px;">So much, so fast</h4>
+      <p>Sheets, core subjects, articles, videos and TUF+ live close together. Newcomers can struggle to tell where the "main road" is versus a side street.</p>
+    </article>
+    <article class="ocard reveal">
+      <span class="tag" style="padding-top:0;color:var(--coral);">Pain · Feedback</span>
+      <h4 style="margin-top:14px;">Am I on track?</h4>
+      <p>It's hard to know if your pace is "interview-ready by next month" or "comfortably behind." Progress is counted, but rarely <em>interpreted</em> for the learner.</p>
+    </article>
+    <article class="ocard reveal">
+      <span class="tag" style="padding-top:0;color:var(--coral);">Pain · Solitude</span>
+      <h4 style="margin-top:14px;">Studying alone</h4>
+      <p>Prep is lonely. There's little sense of others walking the same path right now — a missed source of accountability that costs nothing in content to provide.</p>
+    </article>
+  </div>
+</section>
+
+<hr class="rule" />
+
+<!-- ============ 06 RECOMMENDATIONS ============ -->
+<section class="band band--alt" id="recommendations">
+  <div class="wrap">
+    <span class="eyebrow"><span class="num">06</span> · Recommendations</span>
+    <h2 class="display" style="max-width:20ch;">Six small nudges, drawn from the field.</h2>
+    <p class="lede reveal" style="margin-top:22px;max-width:62ch;">Each is deliberately modest. The goal isn't a redesign — it's to make returning feel effortless and progress feel legible. <em class="c">Small surface, large effect.</em></p>
+
+    <div class="recs">
+      <div class="rec reveal">
+        <div class="rec__n">01</div>
+        <div class="rec__cat">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span class="lbl">Re-entry</span>
+        </div>
+        <div>
+          <h4>A single "Resume" surface</h4>
+          <p>The first thing a returning learner sees should be one card: <em>"You were on Sliding Window — pick up at problem 4 of 9."</em> One tap back into flow. This alone likely recovers more streaks than any new content could.</p>
+        </div>
+      </div>
+
+      <div class="rec reveal">
+        <div class="rec__n">02</div>
+        <div class="rec__cat">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M12 12l4-2M12 7v5" stroke-linecap="round"/></svg>
+          <span class="lbl">Pacing</span>
+        </div>
+        <div>
+          <h4>Shrink the wall into a "today"</h4>
+          <p>Keep the full sheet for the planners, but default beginners to a daily view — <em>"3 problems today."</em> The path stays the same; only the framing changes from a mountain to a step.</p>
+        </div>
+      </div>
+
+      <div class="rec reveal">
+        <div class="rec__n">03</div>
+        <div class="rec__cat">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 12a9 9 0 11-3-6.7" stroke-linecap="round"/><path d="M21 4v5h-5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span class="lbl">Revision</span>
+        </div>
+        <div>
+          <h4>Gentle spaced revision</h4>
+          <p>Use the data already captured — solve dates — to surface a light "revisit" queue. Not a heavy SRS system; just <em>"5 problems are worth a second look this week."</em> Retention is where interviews are won.</p>
+        </div>
+      </div>
+
+      <div class="rec reveal">
+        <div class="rec__n">04</div>
+        <div class="rec__cat">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 17l6-6 4 4 8-8" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 7v4h-4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span class="lbl">Feedback</span>
+        </div>
+        <div>
+          <h4>Interpret progress, don't just count it</h4>
+          <p>Translate raw counts into meaning: <em>"At this pace you'll finish core DSA in ~6 weeks."</em> A learner who can see the finish line behaves completely differently from one staring at a number.</p>
+        </div>
+      </div>
+
+      <div class="rec reveal">
+        <div class="rec__n">05</div>
+        <div class="rec__cat">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round"/><circle cx="8" cy="6" r="1.4" fill="currentColor" stroke="none"/><circle cx="14" cy="12" r="1.4" fill="currentColor" stroke="none"/></svg>
+          <span class="lbl">Wayfinding</span>
+        </div>
+        <div>
+          <h4>Make the "main road" obvious</h4>
+          <p>A first-run moment that asks one question — <em>"interviewing soon, or building from scratch?"</em> — and quietly hides everything not on that road. The depth stays; the noise recedes until it's needed.</p>
+        </div>
+      </div>
+
+      <div class="rec reveal">
+        <div class="rec__n">06</div>
+        <div class="rec__cat">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0112 0" stroke-linecap="round"/><path d="M16 6a3 3 0 010 6M21 20a6 6 0 00-3.5-5.5" stroke-linecap="round"/></svg>
+          <span class="lbl">Accountability</span>
+        </div>
+        <div>
+          <h4>A quiet sense of company</h4>
+          <p>No social network needed — just a soft signal: <em>"1,240 people solved this today."</em> Optional streaks and cohort prompts turn a lonely grind into a shared one, at near-zero content cost.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="rule" />
+
+<!-- ============ BEFORE / AFTER ============ -->
+<section class="band wrap" id="beforeafter">
+  <span class="eyebrow"><span class="num">07</span> · Before vs After</span>
+  <h2 class="display" style="max-width:18ch;">The same content, a softer on-ramp.</h2>
+  <p class="lede reveal" style="margin-top:22px;max-width:60ch;">A concrete picture of the returning-learner moment — today, and as it could feel with the nudges above. Notice that nothing in the curriculum changes.</p>
+
+  <div class="ba">
+    <div class="ba__col reveal">
+      <div class="ba__head"><span class="t">Today</span><span class="pill">As observed</span></div>
+      <div class="ba__body">
+        <ul>
+          <li><span class="m">—</span><span>Returning learner lands on a broad homepage and must find their sheet again.</span></li>
+          <li><span class="m">—</span><span>The full 450-problem sheet loads at once; position must be reconstructed by hand.</span></li>
+          <li><span class="m">—</span><span>Progress shows as a count, e.g. "112 solved," without interpretation.</span></li>
+          <li><span class="m">—</span><span>Previously solved topics fade with no prompt to revise before interviews.</span></li>
+          <li><span class="m">—</span><span>The journey feels solitary; no signal that others are on the same path.</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="ba__col after reveal">
+      <div class="ba__head"><span class="t">Could be</span><span class="pill">Proposed</span></div>
+      <div class="ba__body">
+        <ul>
+          <li><span class="m">→</span><span>A single "Resume" card greets them: the exact next problem, one tap away.</span></li>
+          <li><span class="m">→</span><span>A focused "Today" view — 3 problems — with the full sheet one click deeper.</span></li>
+          <li><span class="m">→</span><span>Progress is read back as meaning: "~6 weeks to interview-ready at this pace."</span></li>
+          <li><span class="m">→</span><span>A light "revisit 5" queue surfaces aging topics automatically.</span></li>
+          <li><span class="m">→</span><span>A quiet "1,240 solved this today" turns the grind into shared momentum.</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="rule" />
+
+<!-- ============ ANNOTATED MOCK ============ -->
+<section class="band band--alt wrap" id="annotated">
+  <span class="eyebrow"><span class="num">08</span> · Sketch</span>
+  <h2 class="display" style="max-width:20ch;">What "Resume" might look like.</h2>
+  <p class="lede reveal" style="margin-top:22px;max-width:60ch;">A rough sketch, not a spec — to make the first recommendation tangible. The annotations point to the small decisions that carry most of the weight.</p>
+
+  <div class="shot">
+    <div class="browser reveal">
+      <div class="browser__bar">
+        <div class="browser__dots"><i></i><i></i><i></i></div>
+        <div class="browser__url">takeuforward.org / resume</div>
+      </div>
+      <div class="browser__view">
+        <div class="mocktitle">Welcome back — pick up where you left off</div>
+        <div class="mockrow done"><span class="chk"></span><span class="bar w3" style="flex:1;"></span><span class="tagm">Sliding Window</span></div>
+        <div class="mockrow"><span class="chk"></span><span class="bar w1" style="flex:1;"></span><span class="tagm">Next · #4 of 9</span></div>
+        <div class="mockrow"><span class="chk"></span><span class="bar w2" style="flex:1;"></span><span class="tagm">Today</span></div>
+        <div class="mockrow"><span class="chk"></span><span class="bar w3" style="flex:1;"></span><span class="tagm">Revisit</span></div>
+      </div>
+    </div>
+    <div class="annes">
+      <div class="anne reveal">
+        <h5>One clear next action</h5>
+        <p>The highlighted row is the single most important pixel: the exact next problem. Everything else is secondary.</p>
+      </div>
+      <div class="anne reveal">
+        <h5>"Today," not "everything"</h5>
+        <p>A small, finishable set keeps the wall out of sight until the learner chooses to see it.</p>
+      </div>
+      <div class="anne reveal">
+        <h5>Revision lives here too</h5>
+        <p>The "revisit" row reuses data you already have — solve dates — to protect long-term recall.</p>
+      </div>
+      <div class="anne reveal">
+        <h5>Familiar, not new</h5>
+        <p>It's the same checkbox learners already love, simply reframed around one moment: returning.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BOLD IDEA (full bleed) ============ -->
+<section class="feature" id="boldidea">
+  <div class="wrap">
+    <div class="mag">
+      <div class="mag__aside">
+        <span class="eyebrow">09 · The Bold Idea</span>
+        <h2 class="display">Sell the finish line, not the content.</h2>
+      </div>
+      <div class="reveal">
+        <p class="lede">The content is already the best in the category. The next chapter of growth probably isn't <em>more material</em> — it's <strong>owning the outcome.</strong></p>
+        <p>Position takeUforward not as "where you study DSA" but as <a class="inl" href="#rollout">the place that gets you interview-ready by a date</a>. A guided track, a visible finish line, and gentle accountability turn a library into a program — and a program is what anxious aspirants are truly searching for.</p>
+        <p>This reframes everything paid, too: TUF+ stops being "more videos" and becomes <strong>"the structured run to your offer."</strong> Same depth, a sharper promise.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ROLLOUT ============ -->
+<section class="band wrap" id="rollout">
+  <div class="mag" style="align-items:end;">
+    <div class="mag__aside">
+      <span class="eyebrow"><span class="num">10</span> · Rollout</span>
+      <h2 class="display">How this could ship, gently.</h2>
+    </div>
+    <div class="reveal">
+      <p>None of this needs a big-bang launch. Each nudge can ship as a quiet, reversible experiment — measured against one number: <strong>do learners come back tomorrow?</strong></p>
+    </div>
+  </div>
+
+  <div class="grid3" style="margin-top:46px;">
+    <article class="ocard reveal">
+      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <h4>Start with Resume</h4>
+      <p>Ship the single "resume" card first. Lowest effort, highest leverage, and it makes every later feature more valuable by giving returners a home.</p>
+      <span class="tag">Phase 01 · This sprint</span>
+    </article>
+    <article class="ocard reveal">
+      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 3v18h18" stroke-linecap="round"/><path d="M7 14l4-4 3 3 4-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <h4>Layer in meaning</h4>
+      <p>Add the "today" view, progress interpretation, and the revisit queue. All build on data you already collect; none require new content.</p>
+      <span class="tag">Phase 02 · Next</span>
+    </article>
+    <article class="ocard reveal">
+      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0112 0M16 6a3 3 0 010 6M21 20a6 6 0 00-3.5-5.5" stroke-linecap="round"/></svg>
+      <h4>Then, company</h4>
+      <p>Introduce soft social signals and the outcome-oriented track. By now learners are returning daily — the perfect moment to make it shared.</p>
+      <span class="tag">Phase 03 · Later</span>
+    </article>
+  </div>
+
+  <div class="ps reveal">
+    <div class="lbl">P.S. — On the spirit of this</div>
+    <p>I wrote all of this because I care about what's being built here. takeUforward has already done the hardest part — earning trust and teaching well. Everything above is just an attempt to help that good work reach the people who almost finished. If even one of these notes is useful, it was worth writing.</p>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="foot">
+  <div class="wrap foot__inner">
+    <span class="brand"><span class="dot"></span>Field Notes, for the takeUforward team.</span>
+    <span class="meta">Written with care · 2026 · Vol. 01</span>
+  </div>
+</footer>
+
+<script>
+  // reading progress
+  var progress = document.getElementById('progress');
+  function onScroll(){
+    var h = document.documentElement;
+    var max = h.scrollHeight - h.clientHeight;
+    var p = max > 0 ? (h.scrollTop || document.body.scrollTop) / max : 0;
+    progress.style.width = (p*100) + '%';
+  }
+  document.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+
+  // active nav via IntersectionObserver
+  var links = Array.prototype.slice.call(document.querySelectorAll('#navlinks a'));
+  var map = {};
+  links.forEach(function(a){ map[a.getAttribute('href').slice(1)] = a; });
+  var ids = Object.keys(map);
+  var sections = ids.map(function(id){ return document.getElementById(id); }).filter(Boolean);
+  var navObserver = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){
+        links.forEach(function(l){ l.classList.remove('active'); });
+        var id = e.target.id;
+        if(map[id]) map[id].classList.add('active');
+      }
+    });
+  }, {rootMargin:'-45% 0px -50% 0px', threshold:0});
+  sections.forEach(function(s){ navObserver.observe(s); });
+
+  // reveal on scroll
+  var reveals = document.querySelectorAll('.reveal');
+  var revObserver = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){ e.target.classList.add('in'); revObserver.unobserve(e.target); }
+    });
+  }, {rootMargin:'0px 0px -10% 0px', threshold:0.08});
+  reveals.forEach(function(r){ revObserver.observe(r); });
+</script>
+</body>
+</html>
